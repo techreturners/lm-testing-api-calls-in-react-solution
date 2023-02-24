@@ -20,7 +20,7 @@ test('displays Luke Skywalker', async () => {
   expect(await screen.findByText("Luke Skywalker")).toBeInTheDocument()
 })
 
-test('handles server error', async () => {
+test('handles server error 500', async () => {
   server.use(
     rest.get('https://swapi.dev/api/people/1/', (req, res, ctx) => {
       return res(ctx.status(500))

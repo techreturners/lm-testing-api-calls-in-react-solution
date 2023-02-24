@@ -6,26 +6,29 @@ function useFetchData<TResponse>(url: string) {
   const [data, setData] = useState<TResponse>();
   const [isFetching, setIsFetching] = useState(true);
   const [error, setError] = useState('');
+  const [status, setStatus] = useState<number>()
 
-  useEffect(() => {
+  useEffect(() => { 
     const fetchData = async () => {
       try {
         const response = await fetch(url);
         setIsFetching(false);
+        if(response.status === 200) {
           const json = await response.json()
           setData(json);
-      } catch (e : unknown) { 
-        console.log(e);
+        }
+        setStatus(response.status)
+      } catch (e: unknown) {
         setIsFetching(false);
-        if(isError(e)) {
+        if (isError(e)) {
           setError(e.message)
         }
       }
-    };
-    fetchData();
-  }, [url]);
+    }
+    fetchData()
+   }, [url]);
 
-  return {data, isFetching, error};
+  return { data, isFetching, error, status };
 }
 
 export default useFetchData;
