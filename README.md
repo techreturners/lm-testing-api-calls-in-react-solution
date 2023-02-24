@@ -1,3 +1,8 @@
+# Testing API calls in React - Solution code
+
+A solution repo to the assignment "Testing API calls in React"
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
