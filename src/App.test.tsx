@@ -1,41 +1,44 @@
-import { rest } from 'msw'
-import { setupServer } from 'msw/node'
-import { render, screen } from '@testing-library/react'
-import '@testing-library/jest-dom'
-import App from './App'
+import { rest } from "msw";
+import { setupServer } from "msw/node";
+import { render, screen } from "@testing-library/react";
+import "@testing-library/jest-dom";
+import App from "./App";
+import { FETCH_ERROR_418, FETCH_ERROR_500 } from "./definitions/fetch_errors";
+import { API_BASE_URL } from "./config/config";
 
 const server = setupServer(
-  rest.get('https://swapi.dev/api/people/1/', (req, res, ctx) => {
-    return res(ctx.json({ name: "Luke Skywalker" }))
-  }),
-)
+  rest.get(`${API_BASE_URL}/people/1/`, (req, res, ctx) => {
+    return res(ctx.json({ name: "Luke Skywalker" }));
+  })
+);
 
-beforeAll(() => server.listen())
-afterEach(() => server.resetHandlers())
-afterAll(() => server.close())
+beforeAll(() => server.listen());
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
 
+describe("<App>", () => {
+  test("on successful API call, displays character name", async () => {
+    render(<App />);
+    expect(await screen.findByText("Luke Skywalker")).toBeInTheDocument();
+  });
 
-test('displays Luke Skywalker', async () => {
-  render(<App />)
-  expect(await screen.findByText("Luke Skywalker")).toBeInTheDocument()
-})
+  test("on server error 500, displays correct error message", async () => {
+    server.use(
+      rest.get(`${API_BASE_URL}/people/1/`, (req, res, ctx) => {
+        return res(ctx.status(500));
+      })
+    );
+    render(<App />);
+    expect(await screen.findByText(FETCH_ERROR_500)).toBeInTheDocument();
+  });
 
-test('handles server error 500', async () => {
-  server.use(
-    rest.get('https://swapi.dev/api/people/1/', (req, res, ctx) => {
-      return res(ctx.status(500))
-    }),
-  )
-  render(<App />)
-  expect(await screen.findByText("Oops... something went wrong, try again")).toBeInTheDocument()
-})
-
-test('handles status 418', async () => {
-  server.use(
-    rest.get('https://swapi.dev/api/people/1/', (req, res, ctx) => {
-      return res(ctx.status(418))
-    }),
-  )
-  render(<App />)
-  expect(await screen.findByText("418 I'm a tea pot 🫖, silly")).toBeInTheDocument()
-})
+  test("on HTTP code 418, displays correct error message", async () => {
+    server.use(
+      rest.get(`${API_BASE_URL}/people/1/`, (req, res, ctx) => {
+        return res(ctx.status(418));
+      })
+    );
+    render(<App />);
+    expect(await screen.findByText(FETCH_ERROR_418)).toBeInTheDocument();
+  });
+});

@@ -1,15 +1,26 @@
-import './App.css';
-import useFetchData from './fetchData';
-import { handleResponse } from './utils';
+import "./App.css";
+import useFetchData from "./hooks/use_fetch_data";
+import { outputFetchResult } from "./utils/output_fetch_result";
+import { StarWarsCharacter, Character } from "./components/star_wars_character";
+import { API_BASE_URL } from "./config/config";
 
 function App() {
-
-  const { data, error, isFetching, status } = useFetchData<{ name: string }>('https://swapi.dev/api/people/1/');
+  const { data, error, isFetching, status } = useFetchData<Character>(
+    `${API_BASE_URL}/people/1/`
+  );
 
   return (
     <div className="App">
       <h1>
-        {isFetching ? "Fetching..." : handleResponse(data, error, status)}
+        {isFetching ? (
+          "Fetching..."
+        ) : (
+          <>
+            {outputFetchResult(status, error, data, (data) => (
+              <StarWarsCharacter name={data.name} />
+            ))}
+          </>
+        )}
       </h1>
     </div>
   );
