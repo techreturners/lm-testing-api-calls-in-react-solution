@@ -1,5 +1,5 @@
 import "./App.css";
-import useFetchData from "./hooks/use_fetch_data";
+import { useFetchData } from "./hooks/use_fetch_data";
 import { outputFetchResult } from "./utils/output_fetch_result";
 import { StarWarsCharacter, Character } from "./components/star_wars_character";
 import { API_BASE_URL } from "./config/config";

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { isError } from "../utils/type_guards";
 
-function useFetchData<TResponse>(url: string) {
+export function useFetchData<TResponse>(url: string) {
   const [data, setData] = useState<TResponse>();
   const [isFetching, setIsFetching] = useState(true);
   const [error, setError] = useState("");
@@ -29,5 +29,3 @@ function useFetchData<TResponse>(url: string) {
 
   return { data, isFetching, error, status };
 }
-
-export default useFetchData;
