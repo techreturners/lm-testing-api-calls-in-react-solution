@@ -1,4 +1,4 @@
-# Testing API calls in React - Solution code
+# Testing API calls in React - Solution code ✨
 
 A solution repo to the assignment "Testing API calls in React"
 
